@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    { "source": "/docs", "destination": "/api/docs" },
+    { "source": "/openapi", "destination": "/api/openapi" },
+    { "source": "/autenticacao/:path*", "destination": "/api/autenticacao/:path*" },
+    { "source": "/v1/:path*", "destination": "/api/v1/:path*" }
+  ]
+}
