@@ -1,9 +1,9 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { handleApi } from "../server/router";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
-    const mod = await import("../server/router");
-    await mod.handleApi(req, res);
+    await handleApi(req, res);
   } catch (err) {
     // Avoid crashing the invocation; return a standard 500 payload.
     if (!res.headersSent) {
