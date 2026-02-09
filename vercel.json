@@ -1,4 +1,10 @@
 {
+  "functions": {
+    "api/[[...path]].ts": {
+      "runtime": "nodejs20.x",
+      "includeFiles": ["server/**", "openapi"]
+    }
+  },
   "rewrites": [
     { "source": "/docs", "destination": "/api/docs" },
     { "source": "/openapi", "destination": "/api/openapi" },
