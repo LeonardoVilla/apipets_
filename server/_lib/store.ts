@@ -132,6 +132,6 @@ function cloneDefaultStore() {
 
 async function findDataBlob() {
   const { blobs } = await list({ prefix: DATA_KEY, limit: 1 });
-  const exact = blobs.find((blob) => blob.pathname === DATA_KEY);
+  const exact = blobs.find((blob: { pathname: string }) => blob.pathname === DATA_KEY);
   return exact ?? blobs[0] ?? null;
 }

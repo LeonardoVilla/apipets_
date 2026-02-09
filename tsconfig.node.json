@@ -6,5 +6,5 @@
     "skipLibCheck": true,
     "types": ["node"]
   },
-  "include": ["vite.config.ts", "dev/**/*.ts"]
+  "include": ["vite.config.ts", "dev/**/*.ts", "server/**/*.ts"]
 }

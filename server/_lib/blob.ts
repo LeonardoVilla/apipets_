@@ -13,7 +13,6 @@ function hasBlobToken() {
 
 function normalizeRelativePath(p: string) {
   const normalized = path.posix.normalize("/" + p).replace(/^\//, "");
-  // prevent path traversal
   if (normalized.includes("..")) {
     const hashed = createHash("sha256").update(p).digest("hex");
     return `unsafe/${hashed}`;
