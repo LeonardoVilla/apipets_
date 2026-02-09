@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { del } from "@vercel/blob";
 import { requireAccessToken } from "../../../../_lib/auth";
+import { delByUrl } from "../../../../_lib/blob";
 import { getNumberQuery, json, methodNotAllowed, noContent } from "../../../../_lib/http";
 import { loadStore, saveStore } from "../../../../_lib/store";
 
@@ -23,7 +23,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
-  await del(pet.foto.url);
+  await delByUrl(pet.foto.url);
   pet.foto = undefined;
   await saveStore(store);
 

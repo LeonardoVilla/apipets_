@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { put } from "@vercel/blob";
 import { requireAccessToken } from "../../../../_lib/auth";
+import { putPublic } from "../../../../_lib/blob";
 import { getNumberQuery, json, methodNotAllowed } from "../../../../_lib/http";
 import { parseSingleFile } from "../../../../_lib/multipart";
 import { loadStore, saveStore } from "../../../../_lib/store";
@@ -37,10 +37,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const fotoId = store.nextFotoId++;
   const path = `imagens/tutores/${id}/${fotoId}-${file.filename}`;
-  const blob = await put(path, file.buffer, {
-    contentType: file.mimeType,
-    access: "public",
-  });
+  const blob = await putPublic(path, file.buffer, file.mimeType);
 
   const anexo = {
     id: fotoId,

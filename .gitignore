@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.local-data/
+.env
+.env.*
+!.env.example
+
+# OS / editor
+.DS_Store
+.vscode/

@@ -1,7 +1,16 @@
 import { list, put } from "@vercel/blob";
+import { existsSync } from "node:fs";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import path from "node:path";
 import type { Store } from "./types";
 
 const DATA_KEY = "data.json";
+const LOCAL_DATA_DIR = process.env.LOCAL_DATA_DIR ?? path.join(process.cwd(), ".local-data");
+const LOCAL_STORE_FILE = path.join(LOCAL_DATA_DIR, DATA_KEY);
+
+function hasBlobToken() {
+  return Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+}
 
 const DEFAULT_STORE: Store = {
   nextPetId: 3,
@@ -50,6 +59,24 @@ const DEFAULT_STORE: Store = {
 };
 
 export async function loadStore(): Promise<Store> {
+  if (!hasBlobToken()) {
+    try {
+      if (!existsSync(LOCAL_STORE_FILE)) {
+        return cloneDefaultStore();
+      }
+      const raw = await readFile(LOCAL_STORE_FILE, "utf8");
+      const data = (JSON.parse(raw) ?? {}) as Partial<Store>;
+      return {
+        ...cloneDefaultStore(),
+        ...data,
+        pets: data.pets ?? [],
+        tutores: data.tutores ?? [],
+      };
+    } catch {
+      return cloneDefaultStore();
+    }
+  }
+
   try {
     const blob = await findDataBlob();
     if (!blob) {
@@ -74,6 +101,12 @@ export async function loadStore(): Promise<Store> {
 }
 
 export async function saveStore(store: Store) {
+  if (!hasBlobToken()) {
+    await mkdir(LOCAL_DATA_DIR, { recursive: true });
+    await writeFile(LOCAL_STORE_FILE, JSON.stringify(store, null, 2), "utf8");
+    return;
+  }
+
   await put(DATA_KEY, JSON.stringify(store, null, 2), {
     contentType: "application/json",
     addRandomSuffix: false,
