@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { readFile } from "node:fs/promises";
+import path from "node:path";
 
 import { issueTokens, getBearerToken, verifyRefreshToken, requireAccessToken } from "./_lib/auth";
 import { getNumberQuery, getQueryValue, json, methodNotAllowed, noContent, parseJson } from "./_lib/http";
@@ -90,8 +91,8 @@ export async function handleApi(req: VercelRequest, res: VercelResponse) {
       method: "GET",
       pattern: /^\/openapi\/?$/,
       handler: async (_req, _res) => {
-        const fileUrl = new URL("../openapi", import.meta.url);
-        const content = await readFile(fileUrl, "utf8");
+        const openapiPath = path.join(process.cwd(), "openapi");
+        const content = await readFile(openapiPath, "utf8");
         _res.setHeader("Content-Type", "text/yaml; charset=utf-8");
         _res.status(200).send(content);
       },
